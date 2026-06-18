@@ -1,0 +1,17 @@
+# audit/vetting/policy.yml — graphons assurance settings (CI reads this).
+# See math-commons/formalization-assurance/VETTING.md for the strictness ladder.
+
+# Axiom-vetting coverage enforcement:
+#   L0 none | L1 warn | L2 gate(coverage) | L3 gate(coverage + statement-hash freshness)
+# Start at L1 (records exist for all 4 axioms); raise to L2 once the generated
+# axiom-report + coverage check are wired (see AXIOM_AUDIT.md machine-gate TODO).
+vetting_strictness: L1
+
+# Kernel-authoritative axiom set + counts (generated; never hand-authored).
+# Today the live gate is the in-Lean #print axioms guard:
+#   Graphons/Tests/AxiomGuard.lean   (pins the flagship traces; CI-enforced via build)
+# TODO: also emit audit/axiom-report.txt from it for the comparator/coverage flow.
+axiom_report: audit/axiom-report.txt
+
+# Where per-axiom vetting records live.
+vetting_dir: audit/vetting

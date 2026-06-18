@@ -1,0 +1,8 @@
+# audit/sorry-allowlist.txt — .lean files permitted to contain `sorry`.
+#
+# One repo-relative path per line. Every .lean file NOT listed here must be
+# sorry-free; the assurance gate fails (at L2/L3) if a `sorry` appears elsewhere.
+# `sorryAx`, prose, and commented-out code are not counted.
+#
+# graphons is sorry-free — this allowlist is intentionally EMPTY: no file may
+# carry `sorry`. (The four deferred results rest on named axioms, not sorries.)

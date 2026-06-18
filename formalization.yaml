@@ -1,0 +1,134 @@
+# Project card — Mathlib Initiative formalization.yaml schema.
+# See math-commons/formalization-assurance/FORMALIZATION_YAML.md.
+# RULE: axiom lists, axiom counts, and sorry counts are KERNEL FACTS — generate or
+# CI-check them (from `audit/axiom-report.txt` / Graphons/Tests/AxiomGuard.lean),
+# never hand-author. The values below are a snapshot pending the generated trace.
+
+project:
+  name: graphons
+  description: >
+    Lean 4 / Mathlib formalization of graphons and dense graph limits (Lovász):
+    cut metric, homomorphism densities, counting lemma, weak regularity,
+    compactness/completeness of graphon space, the counting-lemma converse
+    (separation), and Lovász–Szegedy representability. random-fields roadmap
+    layer L9.
+  authors: ["The graphons contributors (random-fields)"]
+  license: Apache-2.0
+  repo: https://github.com/math-commons/graphons
+  toolchain: leanprover/lean4:v4.30.0
+  dependencies: [mathlib]
+
+sources:
+  - title: "Large Networks and Graph Limits"
+    authors: ["László Lovász"]
+    id: "AMS Colloquium Publications 60 (2012)"
+    type: textbook
+  - title: "Limits of dense graph sequences"
+    authors: ["László Lovász", "Balázs Szegedy"]
+    id: "JCTB 96 (2006)"
+    type: paper
+  - title: "Graphons, cut norm and distance, couplings and rearrangements"
+    authors: ["Svante Janson"]
+    id: "NYJM Monographs 4 (2013)"
+    type: paper
+
+status:
+  scope: >
+    Dense graph limit theory over a general standard-Borel probability carrier,
+    with the compactness/completeness layer specialized to the canonical
+    ([0,1], Lebesgue) carrier. sorry-free; four named true-classical axioms.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  # axioms — standard-3 are Mathlib's; the four project axioms are vetted true
+  # classical theorems (see AXIOM_AUDIT.md + audit/vetting/). GENERATED FACT.
+  axioms:
+    standard: [propext, Classical.choice, Quot.sound]
+    project:
+      - name: cutDist_eq_zero_of_homDensity_eq
+        critical: true
+        closure: declared-on-closure   # appears in a headline's #print axioms
+        note: inverse counting lemma (Lovász Thm 11.3); separation converse
+      - name: lovasz_szegedy_representability
+        critical: true
+        closure: declared-on-closure   # appears in a headline's #print axioms
+        note: Lovász–Szegedy Thm 5.54/14.31; owned by reflection-positivity
+      - name: cutNorm_alignment_unit
+        critical: true
+        closure: declared-on-closure   # appears in a headline's #print axioms
+        note: Birkhoff–vN / Rokhlin coupling realization on [0,1]; compactness
+      - name: dyadic_l1Cauchy_approx_unit
+        critical: true
+        closure: declared-on-closure   # appears in a headline's #print axioms
+        note: dyadic condExp + Lévy martingale convergence; dischargeable from Mathlib
+  main_results:
+    - name: instCompactSpaceGraphonSpaceUnit
+      file: Graphons/Limits/CompletenessUnit.lean
+      sorry_count: 0
+      axioms: [propext, Classical.choice, Quot.sound, cutNorm_alignment_unit, dyadic_l1Cauchy_approx_unit]
+      literature_dependencies: ["Lovász LNGL §9, Thm 9.23 (compactness)"]
+    - name: cutDist_eq_zero_iff_homDensity_eq
+      file: Graphons/Characterization/CountingConverse.lean
+      sorry_count: 0
+      axioms: [propext, Classical.choice, Quot.sound, cutDist_eq_zero_of_homDensity_eq]
+      literature_dependencies: ["Lovász LNGL Thm 11.3 (inverse counting / separation)"]
+    - name: representability
+      file: Graphons/Characterization/Representability.lean
+      sorry_count: 0
+      axioms: [propext, Classical.choice, Quot.sound, lovasz_szegedy_representability]
+      literature_dependencies: ["Lovász–Szegedy 2006; LNGL Thm 5.54/14.31"]
+    - name: exists_tendsto_of_fast_unit
+      file: Graphons/Limits/CompletenessUnit.lean
+      sorry_count: 0
+      axioms: [propext, Classical.choice, Quot.sound, cutNorm_alignment_unit, dyadic_l1Cauchy_approx_unit]
+      literature_dependencies: ["Lovász LNGL §9.2 (completeness)"]
+
+automation:
+  ai_authored: true
+  disclosure: >
+    Substantial portions developed with AI assistance (Claude Code; Codex and
+    Gemini deep-think for proof strategy, review, and axiom red-teaming). Human-reviewed; kernel-checked.
+  framework: Lean 4 + Mathlib
+
+fidelity:
+  divergences:
+    - "Compactness/completeness specialized to ([0,1], Lebesgue) (the canonical
+       atomless standard-Borel carrier); general-carrier results are stated where
+       proved. See audit/FAITHFULNESS.md."
+    - "lovasz_szegedy_representability is assumed here and owned/discharged in
+       reflection-positivity (Graph.FLS.main + cut-distance limit)."
+
+review:
+  status: internal-review
+  notes: >
+    Axioms independently red-teamed (true/non-vacuous/no L¹-trap); vetting caught a
+    too-strong first representability statement (missing [0,1] bound) before merge.
+    See AXIOM_AUDIT.md and audit/vetting/.
+
+# Machine-readable faithfulness map. Full table in audit/FAITHFULNESS.md.
+alignment:
+  statements:
+    - source: "Lovász LNGL §8.2 (cut distance)"
+      lean: cutDist
+      module: Graphons/CutMetric/CutDist.lean
+      status: proved
+      note: pseudometric; triangle = gluing lemma
+    - source: "Lovász LNGL §10.2 (counting lemma)"
+      lean: abs_homDensity_sub_le_cutDist
+      module: Graphons/Counting/CountingLemmaCutDist.lean
+      status: proved
+    - source: "Lovász LNGL §9 (compactness)"
+      lean: instCompactSpaceGraphonSpaceUnit
+      module: Graphons/Limits/CompletenessUnit.lean
+      status: proved-mod-axioms
+    - source: "Lovász LNGL Thm 11.3 (separation)"
+      lean: cutDist_eq_zero_iff_homDensity_eq
+      module: Graphons/Characterization/CountingConverse.lean
+      status: proved-mod-axioms
+    - source: "Lovász–Szegedy 2006 (representability)"
+      lean: representability
+      module: Graphons/Characterization/Representability.lean
+      status: proved-mod-axioms
+
+acknowledgements: >
+  Part of the random-fields formalization program. Assurance conventions:
+  math-commons/formalization-assurance.
