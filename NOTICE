@@ -1,0 +1,28 @@
+graphons — a Lean 4 / Mathlib formalization of dense graph limit theory.
+
+Code license: Apache License 2.0 (see LICENSE).
+
+Mathematical attribution
+------------------------
+The definitions and theorems formalized in this repository are due to their
+original authors, principally:
+
+  - L. Lovász, "Large Networks and Graph Limits", American Mathematical Society,
+    Colloquium Publications 60 (2012) — the comprehensive source followed here
+    (cut metric, homomorphism densities, the counting lemma, weak regularity,
+    compactness, the separation/inverse-counting theorem).
+  - L. Lovász and B. Szegedy, "Limits of dense graph sequences",
+    J. Combin. Theory Ser. B 96 (2006) — graphon limits and representability.
+  - C. Borgs, J. Chayes, L. Lovász, V. T. Sós, K. Vesztergombi, "Convergent
+    sequences of dense graphs" I–II — the convergence/cut-metric theory.
+
+This repository is an **independent formalization** of that mathematics in Lean 4:
+the Lean source is original expression. No prose, figures, tables, or other
+copyrightable expression from the above works is reproduced here; references to
+them (by theorem and section number) are scholarly citation. Mathematical results
+themselves are not subject to copyright.
+
+Authorship
+----------
+The Lean code and accompanying documentation were substantially AI-authored
+(see formalization.yaml) and human-reviewed.
