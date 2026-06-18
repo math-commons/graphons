@@ -94,6 +94,7 @@ comparator). Local settings:
 | Axiom audit | [`AXIOM_AUDIT.md`](AXIOM_AUDIT.md) (repo root) — 4 active axioms |
 | Vetting strictness | [`audit/vetting/policy.yml`](audit/vetting/policy.yml) — `L1` |
 | Per-axiom vetting records | [`audit/vetting/`](audit/vetting/) |
+| Object contracts | [`audit/contracts/`](audit/contracts/) — `known_values` card for `homDensity` |
 | Faithfulness (informal↔formal) | [`audit/FAITHFULNESS.md`](audit/FAITHFULNESS.md) |
 | Acceptance / characterization | [`audit/VALIDATION.md`](audit/VALIDATION.md) |
 | Kernel axiom gate | [`Graphons/Tests/AxiomGuard.lean`](Graphons/Tests/AxiomGuard.lean) (pins `#print axioms`, CI-enforced) + [`audit/axiom_report.lean`](audit/axiom_report.lean) (report generator) |
