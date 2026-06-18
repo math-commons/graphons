@@ -1,4 +1,4 @@
-# VERIFICATION — a dictionary between graphon theory and the Lean formalization
+# FAITHFULNESS — a dictionary between graphon theory and the Lean formalization
 
 This document is addressed to a mathematician who knows the basic theory of graphons and dense
 graph limits as in Lovász, *Large Networks and Graph Limits* (AMS Colloquium Publications 60,

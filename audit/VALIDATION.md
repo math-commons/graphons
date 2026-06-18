@@ -3,7 +3,7 @@
 This document is addressed to a mathematician who knows graphons as in Lovász, *Large
 Networks and Graph Limits* (2012; "LNGL"). It makes the case that the Lean library in this
 repository is a **correct formalization of dense graph limit theory** — not a type-checked
-look-alike. The companion [`VERIFICATION.md`](VERIFICATION.md) is the dictionary (definitions
+look-alike. The companion [`FAITHFULNESS.md`](FAITHFULNESS.md) is the dictionary (definitions
 and theorem statements, side by side with the informal theory, plus the audit recipe); this
 document is the argument.
 
@@ -157,7 +157,7 @@ axis none of §1–§5 touches.
 ## §7 Adversarial hardening (the suite polices itself)
 
 - **The axiom ledger cannot silently grow.** Exactly four classical theorems are assumed
-  (stated in full in [`VERIFICATION.md`](VERIFICATION.md) §4, each independently vetted; one
+  (stated in full in [`FAITHFULNESS.md`](FAITHFULNESS.md) §4, each independently vetted; one
   earlier candidate was caught **false as stated** during vetting and rejected —
   `HISTORY.md` items 36–37). `Graphons/Tests/AxiomGuard.lean` pins the verbatim
   `#print axioms` output of every flagship theorem: any new assumption anywhere in the
@@ -172,7 +172,7 @@ axis none of §1–§5 touches.
 ## §8 What is **not** claimed (honest limitations)
 
 1. **Four classical theorems are assumed, not proved** (axioms #1–4; full statements,
-   dependency map, and discharge plans in `VERIFICATION.md` §4 and `HISTORY.md`). Everything
+   dependency map, and discharge plans in `FAITHFULNESS.md` §4 and `HISTORY.md`). Everything
    outside completeness/compactness, the inverse counting direction, and the representability
    "if" direction is axiom-free — including the uniqueness theorem of §5 and all of §§1, 2,
    4, 6.
@@ -188,14 +188,14 @@ axis none of §1–§5 touches.
 5. **Turán is formalized for `K₃` (Mantel) only**; general `r` is open here.
 6. A.e.-equal graphons are distinct *objects* (functions) identified only in `GraphonSpace`
    (`δ□ = 0`); all metric-level and density-level results respect this identification.
-   This is a presentation choice, not a mathematical difference — see `VERIFICATION.md` §2.1.
+   This is a presentation choice, not a mathematical difference — see `FAITHFULNESS.md` §2.1.
 
 ## §9 Summary for the impatient referee
 
-Read `VERIFICATION.md` §2 (the seven definitions, ~2 pages) and decide they are LNGL's
+Read `FAITHFULNESS.md` §2 (the seven definitions, ~2 pages) and decide they are LNGL's
 objects; skim the statements of `weak_regularity`, `cutDist_eq_zero_iff_homDensity_eq`,
 `instCompactSpaceGraphonSpaceUnit`, `goodman`, `mantel`, `abs_expectedHomDensity_sub_le`,
-`isDenseGraphLimitTheory_unique`; read the four axiom statements in `VERIFICATION.md` §4; run
+`isDenseGraphLimitTheory_unique`; read the four axiom statements in `FAITHFULNESS.md` §4; run
 `lake build` (or trust CI) and `python3 scripts/hom_density_reference.py`. That is the entire
 trust base. Everything else — proof scripts, development history, AI provenance
 (`METHODOLOGY.md`, `HISTORY.md`) — is outside it.
