@@ -45,12 +45,14 @@ records in `math-commons/graphons/docs/` (carrier encoding; coupling-primary cut
    `W : Ω → Ω → ℝ` on a probability space `(Ω, μ)`, symmetric/measurable/`[0,1]`-valued
    *everywhere*, carrying a pointwise `Module ℝ` on the underlying symmetric kernels (so `U − W`
    is literal, for the cut metric). The a.e. / weak-isomorphism identification is taken **once**,
-   at `GraphonSpace`. An `AEEqFun` adapter is provided where analysis is genuinely cleaner there
-   (conditional expectation), but is **not** a mandatory tier. Rule: **construction may be
-   representative-based; every user-facing theorem must be quotient-stable.**
+   at `GraphonSpace`. The explicit `AEEqFun` bridge is a named deliverable (Layer 3), built where
+   the a.e. view is first needed — the conditional-expectation arguments of Layer 4 — and is also
+   the interop point with a natively-`AEEqFun` development; earlier layers consume only the strict
+   carrier. Rule: **construction may be representative-based; every user-facing theorem must be
+   quotient-stable.**
 2. **Cut distance — coupling-primary.** `cutDist` is `⨅` over couplings of the cut-norm of the
    overlay; the triangle inequality is the gluing lemma. Agreement with the classical
-   measure-preserving-map infimum is a **named milestone** (Layer 4), not the definition.
+   measure-preserving-map infimum is a **named milestone** (Layer 5), not the definition.
 3. **Finite graphs — simple, `Sym2` edges.** `SimpleGraph V` with `[Fintype V]`; edges via
    `SimpleGraph.edgeFinset` / `Sym2`; density normalized `t(F, W_G) = hom(F,G)/|V(G)|^{|V(F)|}`.
    Weighted graphs appear only as the technically convenient dense subset for the
@@ -73,7 +75,7 @@ records in `math-commons/graphons/docs/` (carrier encoding; coupling-primary cut
   cut-distance infima; `Metric`/`PseudoMetric`/`UniformSpace` for `GraphonSpace`.
 - **Known gap to consume-or-build:** the **measure-preserving** isomorphism of atomless
   standard Borel spaces with `([0,1], vol)`. Mathlib has `PolishSpace.measurableEquiv` but not
-  the measure-preserving version; this is the input to Layer 4 (and to Cameron's
+  the measure-preserving version; this is the input to Layer 5 (and to Cameron's
   `exists_common_extension`).
 
 ## What is missing (build here)
@@ -112,38 +114,65 @@ descent of `t(F,·)` to `GraphonSpace`; **Frieze–Kannan weak regularity** with
 complexity bound; step graphons are `δ□`-dense and `(GraphonSpace, δ□)` is **totally bounded**.
 Axiom-free in `math-commons/graphons` today.
 
-### Layer 3 — completeness and compactness **[discharge]**
+### Layer 3 — the L⁰ / `AEEqFun` bridge **[build]**
+A round-trip adapter between the strict carrier and Mathlib's `AEEqFun`: a map
+`Graphon Ω μ → ((Ω × Ω) →ₘ[μ ⊗ μ] ℝ)` and a measurable-representative section back, with
+`homDensity`, `cutNorm`, and `cutDist` proved to factor through the a.e. class. This is where
+the a.e. view enters the development — explicitly, in one place — so the conditional-expectation
+and martingale arguments of Layer 4 run in `L⁰` and transport back to the strict object, and so
+a natively-`AEEqFun` development (Cameron's) interoperates with this one. Built here as the
+prerequisite for Layer 4; Layers 1–2 consume only the strict carrier. Genuinely new — neither
+source repo has a cross-carrier bridge (one is strict-only, the other `AEEqFun`-only).
+
+### Layer 4 — completeness and compactness **[discharge]**
 Completeness and compactness of `GraphonSpace` over atomless standard Borel (the
 Lovász–Szegedy compactness theorem). Discharges the two measure-theoretic axioms
 `cutNorm_alignment_unit` and `dyadic_l1Cauchy_approx_unit` (Birkhoff–von Neumann / Rokhlin
 realignment; dyadic conditional-expectation + martingale `L¹`-Cauchy). Mathlib's `condExp` and
 martingale convergence are the engine.
 
-### Layer 4 — coupling ↔ map equivalence **[discharge]**
+### Layer 5 — coupling ↔ map equivalence **[discharge]**
 `cutDist_coupling = cutDist_pullback` under atomless standard Borel. **Single milestone that
 clears a gap on both sides**: `math-commons/graphons`' open "maps attain the coupling infimum"
 direction *and* `cameronfreer/graphon`'s `exists_common_extension` / Rokhlin `sorry`. Gated on
 the missing Mathlib measure-isomorphism theorem, so run it **in parallel**, not on the critical
 path.
 
-### Layer 5 — separation / inverse counting (the summit) **[discharge]**
+### Layer 6 — separation / inverse counting (the summit) **[discharge]**
 `δ□(U,W) = 0 ⟺ ∀ F, t(F,U) = t(F,W)`; hence the moment map is injective on `GraphonSpace`; hence
 the convergence equivalence `δ□(Wₙ, W) → 0 ⟺ ∀F, t(F,Wₙ) → t(F,W)`. Discharges
 `math-commons/graphons`' axiom `cutDist_eq_zero_of_homDensity_eq` and is exactly
 `cameronfreer/graphon`'s active `InverseCounting` / `MatrixDetermination` / `CycleKrylov` work
 (issue #70). **Highest-leverage self-contained target.**
 
-### Layer 6 — applications and validation **[migrate]**
+### Layer 7 — applications and validation **[migrate]**
 Extremal consequences as acceptance tests (Goodman, Mantel, Sidorenko-`C₄`), the W-random
 sampling-expectation lemma `E[t(F, G(n,W))] → t(F,W)`, and the concrete rational density tests.
-These keep the definitions honest and give visible checkpoints before Layers 3–5 close.
+These keep the definitions honest and give visible checkpoints before Layers 4–6 close.
 
-### Long horizon (aspiration)
-Lovász–Szegedy **representability** (graph parameters `= t(·, W)` iff multiplicative /
-normalized / reflection-positive / `[0,1]`-bounded) — the fourth `math-commons/graphons` axiom,
-best discharged in coordination with a reflection-positivity development rather than re-proved
-here. Almost-sure and second (`δ□(G(n,W), W) → 0`) sampling lemmas. The exchangeable-arrays /
-Aldous–Hoover bridge to Cameron's `exchangeability` project.
+### Layer 8 — Lovász–Szegedy representability **[discharge]**
+Graph parameters are `= t(·, W)` iff multiplicative / normalized / reflection-positive /
+`[0,1]`-bounded — the fourth `math-commons/graphons` axiom (`lovasz_szegedy_representability`).
+Best discharged in coordination with a reflection-positivity development rather than re-proved
+here; sequenced late because it depends on that external track, but it is work we want, not
+optional.
+
+### Layer 9 — sampling and exchangeable arrays **[build]**
+The almost-sure first sampling lemma and the second sampling lemma `δ□(G(n,W), W) → 0`
+(LNGL Lemma 10.16), then the exchangeable-arrays / Aldous–Hoover bridge connecting graphons to
+Cameron's `exchangeability` project. The natural long-horizon endpoint; later than the spine,
+but on the roadmap.
+
+### Upstream to Mathlib **[defer]**
+Several prerequisites are reusable beyond graphons and are upstream candidates — but only once
+the API has stabilized here; premature upstreaming churns against Mathlib review. Deferred, not
+omitted. Initial inventory:
+- the **measure-preserving** isomorphism of an atomless standard Borel space with `([0,1], vol)`
+  (the Layer 5 gate; Mathlib has only the measurable-equiv version);
+- reusable **conditional-expectation / dyadic-martingale `L¹`-convergence** lemmas (Layer 4);
+- **finite product / `Measure.pi` curry–uncurry** lemmas (Layer 0);
+- **`AEEqFun` ergonomics** exercised by the Layer 3 bridge.
+No upstreaming is scheduled before Layers 1–4 are `sorry`-free in `TauCeti/`.
 
 ---
 
@@ -181,16 +210,21 @@ example {V : Type*} [Fintype V] (F : SimpleGraph V) [DecidableRel F.Adj]
 example (W : Graphon Ω μ) (ε : ℝ) (hε : 0 < ε) :
     ∃ P : Partition Ω, P.card ≤ 4 ^ ⌈1 / ε ^ 2⌉₊ ∧ cutNorm μ (W - stepW W P) ≤ ε := sorry
 
-/-- Layer 3 [discharge]. Compactness of graphon space over `[0,1]`
+/-- Layer 3 [build]. L⁰ bridge: `homDensity` (and `cutNorm`/`cutDist`) factor through the
+    a.e. class, so the strict carrier and the `AEEqFun` carrier agree on all observables. -/
+example {V : Type*} [Fintype V] (F : SimpleGraph V) [DecidableRel F.Adj] (U W : Graphon Ω μ)
+    (h : toAEEqFun U = toAEEqFun W) : homDensity μ F U = homDensity μ F W := sorry
+
+/-- Layer 4 [discharge]. Compactness of graphon space over `[0,1]`
     (discharges `cutNorm_alignment_unit`, `dyadic_l1Cauchy_approx_unit`). -/
 example : CompactSpace (GraphonSpace (volume.restrict (Set.Icc (0:ℝ) 1))) := sorry
 
-/-- Layer 4 [discharge]. Coupling ↔ map cut distance (atomless standard Borel).
+/-- Layer 5 [discharge]. Coupling ↔ map cut distance (atomless standard Borel).
     Discharges this repo's open direction and Cameron's `exists_common_extension`. -/
 example [StandardBorelSpace Ω] (U W : Graphon Ω μ) :
     cutDistCoupling μ U W = cutDistPullback μ U W := sorry
 
-/-- Layer 5 [discharge]. Separation / inverse counting — the summit.
+/-- Layer 6 [discharge]. Separation / inverse counting — the summit.
     Discharges `cutDist_eq_zero_of_homDensity_eq`; = Cameron's issue #70. -/
 example [StandardBorelSpace Ω] (U W : Graphon Ω μ) :
     cutDist μ U W = 0 ↔
@@ -210,11 +244,12 @@ result **descends to the intended quotient and passes the gates**, not merely co
 
 ## Ordering
 
-Layers 0–2 and 6 first (all `[migrate]`, axiom-free today) — they validate the pipeline and
-give visible checkpoints. Then Layer 5 (separation) as the highest-leverage self-contained
-summit, with Layer 3 (compactness) alongside it. Layer 4 (coupling↔map) runs in parallel,
-gated on the Mathlib measure-isomorphism theorem, and must not block the others. The long-horizon
-items (representability, second sampling lemma, exchangeable arrays) follow.
+Layers 0–2 and 7 first (all `[migrate]`, axiom-free today) — they validate the pipeline and
+give visible checkpoints. The L⁰ bridge (Layer 3) lands next, as the prerequisite for the
+analytic layers. Then Layer 6 (separation) as the highest-leverage self-contained summit, with
+Layer 4 (compactness) alongside it. Layer 5 (coupling↔map) runs in parallel, gated on the
+Mathlib measure-isomorphism theorem, and must not block the others. Representability (Layer 8),
+sampling/exchangeable arrays (Layer 9), and the Mathlib upstreaming follow.
 
 ## Provenance (secondary — reviewers judge the math, not this map)
 
@@ -223,11 +258,11 @@ Two independent sources, to be migrated then discharged, not imported wholesale:
   audited axioms (`cutNorm_alignment_unit`, `dyadic_l1Cauchy_approx_unit`,
   `cutDist_eq_zero_of_homDensity_eq`, `lovasz_szegedy_representability`); broad packaged theory
   (`GraphonSpace`, extremal consequences, sampling, characterization), coupling `cutDist`,
-  strict carrier. Supplies Layers 0–2, 6 and the axiom→discharge tickets for 3–5.
+  strict carrier. Supplies Layers 0–2, 7 and the axiom→discharge tickets for 4–6, 8.
 - [`cameronfreer/graphon`](https://github.com/cameronfreer/graphon) — no custom axioms, three
   `sorry`s (`exists_common_extension`, algebraic determination, the determination theorem);
   blueprint + dependency graph; `AEEqFun` carrier, measure-preserving-map `cutDist`; active
-  spectral/determination work (issue #70). Supplies the proof routes for Layers 4–5 and the
+  spectral/determination work (issue #70). Supplies the proof routes for Layers 3, 5–6 and the
   blueprint dependency spine.
 
 ## References
